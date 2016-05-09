@@ -5,11 +5,6 @@
 /* Notice:         This code can be used freely for personal, academic,          */
 /*                 or non-commercial purposes. For commercial purposes,          */
 /*                 please contact S. Harase at: harase @ fc.ritsumei.ac.jp       */
-/*                                                                               */
-/* Remark:         We recommend using the most significant bits (not taking the  */
-/*                 least significant bits) because our generators are optimized  */
-/*				   preferentially from the most significant bits,                */
-/*                 see Remark 4.1 for details.                                   */
 /* ***************************************************************************** */
 
 #include <stdio.h>
@@ -151,32 +146,6 @@ double genrand64_real3(void)
     return ((genrand64_int64() >> 12) + 0.5) * (1.0/4503599627370496.0);
 }
 
-/* generates a random number on [0,1)-real-interval using a union trick */
-double genrand64_res53(void)
-{
-    union {
-	unsigned long long int u;
-	double d;
-    } conv;
-	
-	conv.u = (genrand64_int64() >> 12) | 0x3FF0000000000000ULL;
-	
-	return (conv.d - 1.0);
-}
-
-/* generates a random number on (0,1)-real-interval using a union trick */
-double genrand64_res53_open(void)
-{
-    union {
-	unsigned long long int u;
-	double d;
-    } conv;
-	
-	conv.u = (genrand64_int64() >> 12) | 0x3FF0000000000001ULL;
-	
-	return (conv.d - 1.0);
-}
-
 int main(void)
 {
     int i;
@@ -190,11 +159,6 @@ int main(void)
     printf("\n1000 outputs of genrand64_real2()\n");
     for (i=0; i<1000; i++) {
       printf("%10.15f ", genrand64_real2());
-      if (i%5==4) printf("\n");
-    }
-    printf("\n1000 outputs of genrand64_res53()\n");
-    for (i=0; i<1000; i++) {
-      printf("%10.15f ", genrand64_res53());
       if (i%5==4) printf("\n");
     }
     return 0;
