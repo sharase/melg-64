@@ -1,5 +1,5 @@
 /* ***************************************************************************** */
-/* A C-program for MEMT6077-64                                                   */
+/* A C-program for MEMT607-64-JUMP                                               */
 /* Copyright:      Shin Harase, Ritsumeikan University                           */
 /*                 Takamitsu Kimoto, Recruit Holdings Co., Ltd.                  */
 /* Notice:         This code can be used freely for personal, academic,          */
@@ -13,6 +13,8 @@
 /* ***************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 #define NN 9
 #define MM 5
@@ -39,6 +41,15 @@ static unsigned long long case_2(void);
 static unsigned long long case_3(void);
 static unsigned long long case_4(void);
 unsigned long long (*genrand64_int64)(void);
+
+struct memt_state{
+	unsigned long long int lung;
+	unsigned long long int mt[NN];
+	int mti;
+	unsigned long long int (*function_p)(void);
+};
+
+static void add(struct memt_state *state);
 
 /* initializes mt[NN] and lung with a seed */
 void init_genrand64(unsigned long long seed)
@@ -175,6 +186,98 @@ double genrand64_res53_open(void)
 	return (conv.d - 1.0);
 }
 
+/* This is a jump function for the generator. It is equivalent
+   to 2^256 calls to genrand64_int64(). */
+void memt_jump(void)
+{
+	struct memt_state *memt_state_init;
+	int i, j;
+	int bits, mask;
+	
+	//jump size 2^256
+	char jump_string[] = 
+        "f3d27aef5c025caca71e8dfb38d8e7ce5fe0d46c04317c6f50"
+        "ef41c5edce6ebf48fe2929dd0ca41af901d536b52ae616662b"
+        "620bad0a18060e54c127d729bdcb439f7ee398bec8e7195562"
+        "9c";
+	
+	/*allocates memt_state_init*/
+	memt_state_init = (struct memt_state *)malloc(sizeof(struct memt_state));
+	
+	/*initializes memt_state_init*/
+	memt_state_init->lung = 0ULL;
+	for(i = 0; i < NN; i++) memt_state_init->mt[i] = 0ULL;
+	memt_state_init->mti = mti;
+	memt_state_init->function_p = genrand64_int64;
+	
+	for (i = 0; i < ceil((double)(NN*W+P)/4); i++) {
+	bits = jump_string[i];
+	if (bits >= 'a' && bits <= 'f') {
+	    bits = bits - 'a' + 10;
+	} else {
+	    bits = bits - '0';
+	}
+	bits = bits & 0x0f;
+	mask = 0x08;
+	for (j = 0; j < 4; j++) {
+	    if ((bits & mask) != 0) {
+			add(memt_state_init);
+			}
+			genrand64_int64();
+			mask = mask >> 1;
+		}
+	}
+	
+	/*updates the new initial state*/
+	lung = memt_state_init->lung;
+	for(i = 0; i < NN; i++) mt[i] = memt_state_init->mt[i];
+	mti = memt_state_init->mti;
+	genrand64_int64 = memt_state_init->function_p;
+	
+	free(memt_state_init);
+}
+
+static void add(struct memt_state *state)
+{
+	int i;
+	int n1, n2;
+	int diff1, diff2;
+	
+	/*adds the lung*/
+	state->lung ^= lung;
+	
+	n1 = state->mti;
+	n2 = mti;
+
+	/*adds the states*/
+	if(n1 <= n2)
+	{
+		diff1 = NN - n2 + n1;
+		diff2 = n2 - n1;
+		
+		for(i = n1; i < diff1; i++)
+			state->mt[i] ^= mt[i + diff2];
+		
+		for(; i < NN; i++)
+			state->mt[i] ^= mt[i - diff1];
+
+		for(i = 0; i < n1; i++)
+			state->mt[i] ^= mt[i + diff2];
+	} else {
+		diff1 = NN - n1 + n2;
+		diff2 = n1 - n2;
+		
+		for(i = n1; i < NN; i++)
+			state->mt[i] ^= mt[i - diff2];
+		
+		for(i = 0; i < diff2; i++)
+			state->mt[i] ^= mt[i + diff1];
+	
+		for(; i < n1; i++)
+			state->mt[i] ^= mt[i - diff2];
+	}
+}
+
 int main(void)
 {
     int i;
@@ -185,15 +288,18 @@ int main(void)
       printf("%20llu ", genrand64_int64());
       if (i%5==4) printf("\n");
     }
-    printf("\n1000 outputs of genrand64_real2()\n");
-    for (i=0; i<1000; i++) {
-      printf("%10.15f ", genrand64_real2());
-      if (i%5==4) printf("\n");
-    }
     printf("\n1000 outputs of genrand64_res53()\n");
     for (i=0; i<1000; i++) {
       printf("%10.15f ", genrand64_res53());
       if (i%5==4) printf("\n");
     }
+    printf("\njump ahead by 2^256 steps");
+    memt_jump(); // It is equivalent to 2^256 calls to genrand64_int64()
+    printf("\n1000 outputs of genrand64_int64()\n");
+    for (i=0; i<1000; i++) {
+      printf("%20llu ", genrand64_int64());
+      if (i%5==4) printf("\n");
+    }
+	
     return 0;
 }
