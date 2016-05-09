@@ -1,5 +1,5 @@
 /* ***************************************************************************** */
-/* A C-program for MEMT6077-64                                                   */
+/* A C-program for MEMT1279-64-JUMP                                              */
 /* Copyright:      Shin Harase, Ritsumeikan University                           */
 /*                 Takamitsu Kimoto, Recruit Holdings Co., Ltd.                  */
 /* Notice:         This code can be used freely for personal, academic,          */
@@ -13,20 +13,22 @@
 /* ***************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
-#define NN 9
-#define MM 5
-#define MATRIX_A 0x81f1fd68012348bcULL
-#define P 31
+#define NN 19
+#define MM 7
+#define MATRIX_A 0x1afefd1526d3952bULL
+#define P 63
 #define W 64
 #define MASKU (0xffffffffffffffffULL << (W-P))
 #define MASKL (~MASKU)
 #define MAT3NEG(t, v) (v ^ (v << ((t))))
 #define MAT3POS(t, v) (v ^ (v >> ((t))))
-#define LAG1 3
-#define SHIFT1 30
-#define MASK1 0x66edc62a6bf8c826ULL
-#define LAG1over 6
+#define LAG1 5
+#define SHIFT1 6
+#define MASK1 0x3a23d78e8fb5e349ULL
+#define LAG1over 14
 
 static unsigned long long mt[NN]; 
 static int mti;
@@ -39,6 +41,15 @@ static unsigned long long case_2(void);
 static unsigned long long case_3(void);
 static unsigned long long case_4(void);
 unsigned long long (*genrand64_int64)(void);
+
+struct memt_state{
+	unsigned long long int lung;
+	unsigned long long int mt[NN];
+	int mti;
+	unsigned long long int (*function_p)(void);
+};
+
+static void add(struct memt_state *state);
 
 /* initializes mt[NN] and lung with a seed */
 void init_genrand64(unsigned long long seed)
@@ -83,8 +94,8 @@ void init_by_array64(unsigned long long init_key[],
 
 static unsigned long long case_1(void) {
     x = (mt[mti] & MASKU) | (mt[mti+1] & MASKL);
-    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[mti+MM] ^ MAT3NEG(13, lung);
-    mt[mti] = x ^ MAT3POS(35, lung);
+    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[mti+MM] ^ MAT3NEG(22, lung);
+    mt[mti] = x ^ MAT3POS(37, lung);
     x = mt[mti] ^ (mt[mti] << SHIFT1);
     x = x ^ (mt[mti + LAG1] & MASK1);
     ++mti;
@@ -94,8 +105,8 @@ static unsigned long long case_1(void) {
 
 static unsigned long long case_2(void) {
     x = (mt[mti] & MASKU) | (mt[mti+1] & MASKL);
-    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[mti+(MM-NN)] ^ MAT3NEG(13, lung);
-    mt[mti] = x ^ MAT3POS(35, lung);
+    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[mti+(MM-NN)] ^ MAT3NEG(22, lung);
+    mt[mti] = x ^ MAT3POS(37, lung);
     x = mt[mti] ^ (mt[mti] << SHIFT1);
     x = x ^ (mt[mti + LAG1] & MASK1);
     ++mti;
@@ -105,9 +116,9 @@ static unsigned long long case_2(void) {
 
 static unsigned long long case_3(void) {
     x = (mt[mti] & MASKU) | (mt[mti+1] & MASKL);
-    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[mti+(MM-NN)] ^ MAT3NEG(13, lung);
-    mt[mti] = x ^ MAT3POS(35, lung);
-    x = mt[mti] ^ (mt[mti] << SHIFT1);
+    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[mti+(MM-NN)] ^ MAT3NEG(22, lung);
+    mt[mti] = x ^ MAT3POS(37, lung);
+	x = mt[mti] ^ (mt[mti] << SHIFT1);
     x = x ^ (mt[mti - LAG1over] & MASK1);
     ++mti;
     if (mti == NN-1) genrand64_int64 = case_4;
@@ -116,9 +127,9 @@ static unsigned long long case_3(void) {
 
 static unsigned long long case_4(void) {
     x = (mt[NN-1] & MASKU) | (mt[0] & MASKL);
-    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[MM-1] ^ MAT3NEG(13, lung);
-    mt[NN-1] = x ^ MAT3POS(35, lung);
-    x = mt[mti] ^ (mt[mti] << SHIFT1);
+    lung = (x >> 1) ^ mag01[(int)(x & 1ULL)] ^ mt[MM-1] ^ MAT3NEG(22, lung);
+    mt[NN-1] = x ^ MAT3POS(37, lung);
+	x = mt[mti] ^ (mt[mti] << SHIFT1);
     x = x ^ (mt[mti - LAG1over] & MASK1);
     mti = 0;
     genrand64_int64 = case_1;
@@ -175,6 +186,101 @@ double genrand64_res53_open(void)
 	return (conv.d - 1.0);
 }
 
+/* This is a jump function for the generator. It is equivalent
+   to 2^256 calls to genrand64_int64(). */
+void memt_jump(void)
+{
+	struct memt_state *memt_state_init;
+	int i, j;
+	int bits, mask;
+	
+	//jump size 2^256
+	char jump_string[] = 
+        "a4704d47efb161016e3736c80e933688017732e3ffc4115893"
+        "8838ba22bb5cddf444d6f3fb8f3431c350ef813cceb90a9587"
+        "b8e1626e74dc53831fba639564f313238548597b13bc13679e"
+        "172cf95e9fabac836d6888253c34e4ac182c6779be5414e2cb"
+        "1933412fcbdc47a055d72c339f5033276d8cc5b491ec343bbe"
+        "7f5467cd6ed8e33b8f1305b10e3b134e67c62358665d196e5c"
+        "2030a9e45ae42eab5e0c";
+
+	/*allocates memt_state_init*/
+	memt_state_init = (struct memt_state *)malloc(sizeof(struct memt_state));
+	
+	/*initializes memt_state_init*/
+	memt_state_init->lung = 0ULL;
+	for(i = 0; i < NN; i++) memt_state_init->mt[i] = 0ULL;
+	memt_state_init->mti = mti;
+	memt_state_init->function_p = genrand64_int64;
+	
+	for (i = 0; i < ceil((double)(NN*W+P)/4); i++) {
+	bits = jump_string[i];
+	if (bits >= 'a' && bits <= 'f') {
+	    bits = bits - 'a' + 10;
+	} else {
+	    bits = bits - '0';
+	}
+	bits = bits & 0x0f;
+	mask = 0x08;
+	for (j = 0; j < 4; j++) {
+	    if ((bits & mask) != 0) {
+			add(memt_state_init);
+			}
+			genrand64_int64();
+			mask = mask >> 1;
+		}
+	}
+	
+	/*updates the new initial state*/
+	lung = memt_state_init->lung;
+	for(i = 0; i < NN; i++) mt[i] = memt_state_init->mt[i];
+	mti = memt_state_init->mti;
+	genrand64_int64 = memt_state_init->function_p;
+	
+	free(memt_state_init);
+}
+
+static void add(struct memt_state *state)
+{
+	int i;
+	int n1, n2;
+	int diff1, diff2;
+	
+	/*adds the lung*/
+	state->lung ^= lung;
+	
+	n1 = state->mti;
+	n2 = mti;
+
+	/*adds the states*/
+	if(n1 <= n2)
+	{
+		diff1 = NN - n2 + n1;
+		diff2 = n2 - n1;
+		
+		for(i = n1; i < diff1; i++)
+			state->mt[i] ^= mt[i + diff2];
+		
+		for(; i < NN; i++)
+			state->mt[i] ^= mt[i - diff1];
+
+		for(i = 0; i < n1; i++)
+			state->mt[i] ^= mt[i + diff2];
+	} else {
+		diff1 = NN - n1 + n2;
+		diff2 = n1 - n2;
+		
+		for(i = n1; i < NN; i++)
+			state->mt[i] ^= mt[i - diff2];
+		
+		for(i = 0; i < diff2; i++)
+			state->mt[i] ^= mt[i + diff1];
+	
+		for(; i < n1; i++)
+			state->mt[i] ^= mt[i - diff2];
+	}
+}
+
 int main(void)
 {
     int i;
@@ -185,15 +291,18 @@ int main(void)
       printf("%20llu ", genrand64_int64());
       if (i%5==4) printf("\n");
     }
-    printf("\n1000 outputs of genrand64_real2()\n");
-    for (i=0; i<1000; i++) {
-      printf("%10.15f ", genrand64_real2());
-      if (i%5==4) printf("\n");
-    }
     printf("\n1000 outputs of genrand64_res53()\n");
     for (i=0; i<1000; i++) {
       printf("%10.15f ", genrand64_res53());
       if (i%5==4) printf("\n");
     }
+    printf("\njump ahead by 2^256 steps");
+    memt_jump(); // It is equivalent to 2^256 calls to genrand64_int64()
+    printf("\n1000 outputs of genrand64_int64()\n");
+    for (i=0; i<1000; i++) {
+      printf("%20llu ", genrand64_int64());
+      if (i%5==4) printf("\n");
+    }
+	
     return 0;
 }
