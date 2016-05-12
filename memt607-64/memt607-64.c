@@ -1,5 +1,5 @@
 /* ***************************************************************************** */
-/* A C-program for MEMT6077-64                                                   */
+/* A C-program for MEMT607-64                                                    */
 /* Copyright:      Shin Harase, Ritsumeikan University                           */
 /*                 Takamitsu Kimoto, Recruit Holdings Co., Ltd.                  */
 /* Notice:         This code can be used freely for personal, academic,          */
@@ -8,7 +8,7 @@
 /*                                                                               */
 /* Remark:         We recommend using the most significant bits (not taking the  */
 /*                 least significant bits) because our generators are optimized  */
-/*				   preferentially from the most significant bits,                */
+/*                 preferentially from the most significant bits,                */
 /*                 see Remark 4.1 for details.                                   */
 /* ***************************************************************************** */
 
@@ -153,7 +153,7 @@ double genrand64_real3(void)
 double genrand64_res53(void)
 {
     union {
-	unsigned long long int u;
+	unsigned long long u;
 	double d;
     } conv;
 	
@@ -166,7 +166,7 @@ double genrand64_res53(void)
 double genrand64_res53_open(void)
 {
     union {
-	unsigned long long int u;
+	unsigned long long u;
 	double d;
     } conv;
 	

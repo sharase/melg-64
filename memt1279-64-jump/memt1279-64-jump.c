@@ -8,7 +8,7 @@
 /*                                                                               */
 /* Remark:         We recommend using the most significant bits (not taking the  */
 /*                 least significant bits) because our generators are optimized  */
-/*				   preferentially from the most significant bits,                */
+/*                 preferentially from the most significant bits,                */
 /*                 see Remark 4.1 for details.                                   */
 /* ***************************************************************************** */
 
@@ -43,12 +43,13 @@ static unsigned long long case_4(void);
 unsigned long long (*genrand64_int64)(void);
 
 struct memt_state{
-	unsigned long long int lung;
-	unsigned long long int mt[NN];
+	unsigned long long lung;
+	unsigned long long mt[NN];
 	int mti;
-	unsigned long long int (*function_p)(void);
+	unsigned long long (*function_p)(void);
 };
 
+void memt_jump(void); //jump ahead by 2^256 steps
 static void add(struct memt_state *state);
 
 /* initializes mt[NN] and lung with a seed */
@@ -164,7 +165,7 @@ double genrand64_real3(void)
 double genrand64_res53(void)
 {
     union {
-	unsigned long long int u;
+	unsigned long long u;
 	double d;
     } conv;
 	
@@ -177,7 +178,7 @@ double genrand64_res53(void)
 double genrand64_res53_open(void)
 {
     union {
-	unsigned long long int u;
+	unsigned long long u;
 	double d;
     } conv;
 	
