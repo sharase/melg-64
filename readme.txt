@@ -1,7 +1,6 @@
 Implementing 64-bit Maximally Equidistributed F2-Linear Generators with Mersenne Prime Period
 
-S. Harase and T. Kimoto, "Implementing 64-bit Maximally Equidistributed F2-Linear Generators with Mersenne Prime Period", 
-submitted. http://arxiv.org/abs/1505.06582
+S. Harase and T. Kimoto, "Implementing 64-bit Maximally Equidistributed F2-Linear Generators with Mersenne Prime Period", submitted. http://arxiv.org/abs/1505.06582
 
 Abstract:
 CPUs and operating systems are moving from 32 to 64 bits, and hence it is important to have good pseudorandom number generators designed to fully exploit these word lengths. However, existing 64-bit very long period generators based on linear recurrences modulo 2 are not completely optimized in terms of the equidistribution properties. Here we develop 64-bit maximally equidistributed pseudorandom number generators that are optimal in this respect and have speeds equivalent to 64-bit Mersenne Twisters. We provide a table of specific parameters with period lengths from $2^{607}-1$ to $2^{44497}-1$.
