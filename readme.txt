@@ -1,4 +1,4 @@
-Implementing 64-bit Maximally Equidistributed F2-Linear Generators with Mersenne Prime Order
+Implementing 64-bit Maximally Equidistributed F2-Linear Generators with Mersenne Prime Period
 
 S. Harase and T. Kimoto, "Implementing 64-bit Maximally Equidistributed F2-Linear Generators with Mersenne Prime Order", submitted. http://arxiv.org/abs/1505.06582
 
