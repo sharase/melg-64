@@ -12,8 +12,8 @@ We attached the acronym 64-bit MELGs,
 for 64-bit ``Maximally Equidistributed $\mathbb{F}_2$-Linear Generators", 
 to the proposed generators.
 
-We modified a initialization schime in init_by_array64.
-Thus, the output values have been chenaged.
+We modified an initialization scheme in init_by_array64.
+Thus, the output values have been changed.
 
 (12 May 2016)
 Minor changes: unsigned long long int -> unsigned long long
