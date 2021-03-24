@@ -1,15 +1,18 @@
 /* ***************************************************************************** */
 /* A C-program for MELG2281-64-JUMP                                              */
-/* Copyright:      Shin Harase, Ritsumeikan University                           */
-/*                 Takamitsu Kimoto, Recruit Holdings Co., Ltd.                  */
-/* Notice:         This code can be used freely for personal, academic,          */
-/*                 or non-commercial purposes. For commercial purposes,          */
-/*                 please contact S. Harase at: harase @ fc.ritsumei.ac.jp       */
-/*                                                                               */
-/* Remark:         We recommend using the most significant bits (not taking the  */
-/*                 least significant bits) because our generators are optimized  */
-/*                 preferentially from the most significant bits,                */
-/*                 see Remark 4.1 for details.                                   */
+/* Copyright:   Shin Harase, Ritsumeikan University                              */
+/*              Takamitsu Kimoto                                                 */
+/* Notice:      This code can be used freely for personal, academic,             */
+/*              or non-commercial purposes. For commercial purposes,             */
+/*              please contact S. Harase at: harase @ fc.ritsumei.ac.jp          */
+/* Reference:   S. Harase and T. Kimoto, "Implementing 64-bit maximally          */ 
+/*              equidistributed F2-linear generators with Mersenne prime period",*/ 
+/*              ACM Transactions on Mathematical Software, Volume 44, Issue 3,   */ 
+/*              April 2018, Article No. 30, 11 Pages.                            */
+/* Remark:      We recommend using the most significant bits (not taking the     */
+/*              least significant bits) because our generators are optimized     */
+/*              preferentially from the most significant bits,                   */
+/*              see Remark 4.1 in the above paper for details.                   */
 /* ***************************************************************************** */
 
 #include <stdio.h>
@@ -55,13 +58,13 @@ static void add(struct melg_state *state);
 /* initializes melg[NN] and lung with a seed */
 void init_genrand64(unsigned long long seed)
 {
-  melg[0] = seed;
-  for (melgi=1; melgi<NN; melgi++) {
-    melg[melgi] = (6364136223846793005ULL * (melg[melgi-1] ^ (melg[melgi-1] >> 62)) + melgi);
-  }
-  lung = (6364136223846793005ULL * (melg[melgi-1] ^ (melg[melgi-1] >> 62)) + melgi);
-  melgi = 0;
-  genrand64_int64 = case_1;
+    melg[0] = seed;
+    for (melgi=1; melgi<NN; melgi++) {
+        melg[melgi] = (6364136223846793005ULL * (melg[melgi-1] ^ (melg[melgi-1] >> 62)) + melgi);
+    }
+    lung = (6364136223846793005ULL * (melg[melgi-1] ^ (melg[melgi-1] >> 62)) + melgi);
+    melgi = 0;
+    genrand64_int64 = case_1;
 }
 
 /* initialize by an array with array-length */
@@ -89,7 +92,7 @@ void init_by_array64(unsigned long long init_key[],
     }
     lung = (lung ^ ((melg[NN-1] ^ (melg[NN-1] >> 62)) * 2862933555777941757ULL))
 	  - NN; /* non linear */
-    melg[0] = (melg[0] || (1ULL << 63)); /* MSB is 1; assuring non-zero initial array */
+    melg[0] = (melg[0] | (1ULL << 63)); /* MSB is 1; assuring non-zero initial array. */
     melgi = 0;
 }
 
@@ -162,7 +165,7 @@ double genrand64_real3(void)
 }
 
 /* generates a random number on [0,1)-real-interval using a union trick */
-double genrand64_res53(void)
+double genrand64_fast_res52(void)
 {
     union {
 	unsigned long long u;
@@ -170,12 +173,11 @@ double genrand64_res53(void)
     } conv;
 	
 	conv.u = (genrand64_int64() >> 12) | 0x3FF0000000000000ULL;
-	
 	return (conv.d - 1.0);
 }
 
 /* generates a random number on (0,1)-real-interval using a union trick */
-double genrand64_res53_open(void)
+double genrand64_fast_res52_open(void)
 {
     union {
 	unsigned long long u;
@@ -183,8 +185,13 @@ double genrand64_res53_open(void)
     } conv;
 	
 	conv.u = (genrand64_int64() >> 12) | 0x3FF0000000000001ULL;
-	
 	return (conv.d - 1.0);
+}
+
+/* generates a random number on [0,1)-real-interval with 53-bit significant bits */
+double genrand64_res53(void)
+{
+	return (genrand64_int64() >> 11) * 0x1.0p-53;
 }
 
 /* This is a jump function for the generator. It is equivalent
