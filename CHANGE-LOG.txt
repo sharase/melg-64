@@ -1,5 +1,5 @@
 (29 March 2021)
-We made index.html insted of README.md.
+We modified README.md using HTML.
 
 (28 March 2021)
 We wrote README.md.
