@@ -1,0 +1,44 @@
+(28 March 2021)
+We wrote README.md.
+The directories were edited.
+We equipped with a jump function as standard feature.
+
+(24 March 2021)
+Typos in the initialization scheme were fixed.
+The output functions
+	genrand64_fast_res52()
+	genrand64_fast_res52_open()
+	genrand64_res53()
+were modified.
+Thus, please note that output velues were changed.
+
+(5 September 2018)
+The paper has been published.
+
+(27 March 2017)
+The paper was revised.
+We renamed the proposed generators.
+We attached the acronym 64-bit MELGs, 
+for 64-bit ``Maximally Equidistributed $\mathbb{F}_2$-Linear Generators", 
+to the proposed generators.
+
+We modified an initialization scheme in init_by_array64.
+Thus, the output values have been changed.
+
+(12 May 2016)
+Minor changes: unsigned long long int -> unsigned long long
+               void memt_jump(void); //jump ahead by 2^256 steps
+
+(10 May 2016)
+We implemented the following functions:
+  genrand64_res53()
+  genrand64_res53_open()
+to generate double-precision floating point numbers on [0,1)- and (0,1)-real-interval by using union tricks.
+
+We implemented a jump ahead algorithm for parallel computing. 
+The default skip size is 2^256.
+
+We also changed some examples in the main functions.
+
+(24 May 2015)
+The code in C was released.

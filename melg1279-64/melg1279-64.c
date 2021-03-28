@@ -16,6 +16,8 @@
 /* ***************************************************************************** */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 #define NN 19
 #define MM 7
@@ -42,6 +44,16 @@ static unsigned long long case_2(void);
 static unsigned long long case_3(void);
 static unsigned long long case_4(void);
 unsigned long long (*genrand64_int64)(void);
+
+struct melg_state{
+	unsigned long long lung;
+	unsigned long long melg[NN];
+	int melgi;
+	unsigned long long (*function_p)(void);
+};
+
+void melg_jump(void); //jump ahead by 2^256 steps
+static void add(struct melg_state *state);
 
 /* initializes melg[NN] and lung with a seed */
 void init_genrand64(unsigned long long seed)
@@ -80,7 +92,7 @@ void init_by_array64(unsigned long long init_key[],
     }
     lung = (lung ^ ((melg[NN-1] ^ (melg[NN-1] >> 62)) * 2862933555777941757ULL))
 	  - NN; /* non linear */
-    melg[0] = (melg[0] | (1ULL << 63)); /* MSB is 1; assuring non-zero initial array. Corrected.  */
+    melg[0] = (melg[0] | (1ULL << 63)); /* MSB is 1; assuring non-zero initial array. Corrected. */
     melgi = 0;
 }
 
@@ -182,6 +194,101 @@ double genrand64_res53(void)
 	return (genrand64_int64() >> 11) * 0x1.0p-53;
 }
 
+/* This is a jump function for the generator. It is equivalent
+   to 2^256 calls to genrand64_int64(). */
+void melg_jump(void)
+{
+	struct melg_state *melg_state_init;
+	int i, j;
+	int bits, mask;
+	
+	//jump size 2^256
+	char jump_string[] = 
+        "a4704d47efb161016e3736c80e933688017732e3ffc4115893"
+        "8838ba22bb5cddf444d6f3fb8f3431c350ef813cceb90a9587"
+        "b8e1626e74dc53831fba639564f313238548597b13bc13679e"
+        "172cf95e9fabac836d6888253c34e4ac182c6779be5414e2cb"
+        "1933412fcbdc47a055d72c339f5033276d8cc5b491ec343bbe"
+        "7f5467cd6ed8e33b8f1305b10e3b134e67c62358665d196e5c"
+        "2030a9e45ae42eab5e0c";
+
+	/*allocates melg_state_init*/
+	melg_state_init = (struct melg_state *)malloc(sizeof(struct melg_state));
+	
+	/*initializes melg_state_init*/
+	melg_state_init->lung = 0ULL;
+	for(i = 0; i < NN; i++) melg_state_init->melg[i] = 0ULL;
+	melg_state_init->melgi = melgi;
+	melg_state_init->function_p = genrand64_int64;
+	
+	for (i = 0; i < ceil((double)(NN*W+P)/4); i++) {
+	bits = jump_string[i];
+	if (bits >= 'a' && bits <= 'f') {
+	    bits = bits - 'a' + 10;
+	} else {
+	    bits = bits - '0';
+	}
+	bits = bits & 0x0f;
+	mask = 0x08;
+	for (j = 0; j < 4; j++) {
+	    if ((bits & mask) != 0) {
+			add(melg_state_init);
+			}
+			genrand64_int64();
+			mask = mask >> 1;
+		}
+	}
+	
+	/*updates the new initial state*/
+	lung = melg_state_init->lung;
+	for(i = 0; i < NN; i++) melg[i] = melg_state_init->melg[i];
+	melgi = melg_state_init->melgi;
+	genrand64_int64 = melg_state_init->function_p;
+	
+	free(melg_state_init);
+}
+
+static void add(struct melg_state *state)
+{
+	int i;
+	int n1, n2;
+	int diff1, diff2;
+	
+	/*adds the lung*/
+	state->lung ^= lung;
+	
+	n1 = state->melgi;
+	n2 = melgi;
+
+	/*adds the states*/
+	if(n1 <= n2)
+	{
+		diff1 = NN - n2 + n1;
+		diff2 = n2 - n1;
+		
+		for(i = n1; i < diff1; i++)
+			state->melg[i] ^= melg[i + diff2];
+		
+		for(; i < NN; i++)
+			state->melg[i] ^= melg[i - diff1];
+
+		for(i = 0; i < n1; i++)
+			state->melg[i] ^= melg[i + diff2];
+	} else {
+		diff1 = NN - n1 + n2;
+		diff2 = n1 - n2;
+		
+		for(i = n1; i < NN; i++)
+			state->melg[i] ^= melg[i - diff2];
+		
+		for(i = 0; i < diff2; i++)
+			state->melg[i] ^= melg[i + diff1];
+	
+		for(; i < n1; i++)
+			state->melg[i] ^= melg[i - diff2];
+	}
+}
+
 int main(void)
 {
     int i;
@@ -192,15 +299,18 @@ int main(void)
       printf("%20llu ", genrand64_int64());
       if (i%5==4) printf("\n");
     }
-    printf("\n1000 outputs of genrand64_real2()\n");
-    for (i=0; i<1000; i++) {
-      printf("%10.15f ", genrand64_real2());
-      if (i%5==4) printf("\n");
-    }
     printf("\n1000 outputs of genrand64_res53()\n");
     for (i=0; i<1000; i++) {
       printf("%10.15f ", genrand64_res53());
       if (i%5==4) printf("\n");
     }
+    printf("\njump ahead by 2^256 steps");
+    melg_jump(); // It is equivalent to 2^256 calls to genrand64_int64()
+    printf("\n1000 outputs of genrand64_int64()\n");
+    for (i=0; i<1000; i++) {
+      printf("%20llu ", genrand64_int64());
+      if (i%5==4) printf("\n");
+    }
+	
     return 0;
 }
