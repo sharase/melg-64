@@ -122,4 +122,4 @@ This criterion implies that the PRNG avoids a long-lasting impact for poor initi
 - S. Harase, "Conversion of Mersenne Twister to double-precision floating-point numbers", Mathematics and Computers in Simulation, Volume 161, July 2019, Pages 76-83. <a href="https://doi.org/10.1016/j.matcom.2018.08.006"> Article</a>
 
 ## Acknowledgments
-This work was partially supported by his work was supported by JSPS KAKENHI Grant Numbers JP18K18016, JP26730015, JP26310211, JP15K13460, JP12J07985.
+This work was partially supported by JSPS KAKENHI Grant Numbers JP18K18016, JP26730015, JP26310211, JP15K13460, JP12J07985.
