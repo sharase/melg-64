@@ -4,7 +4,7 @@
 
 The 64-bit **M**aximally **E**quidistributed **F**<sub>2</sub>-**L**inear **G**enerators with Mersenne Prime Period (**MELG-64**) are 64-bit Mersenne-Twister-type pseudorandom number generators developed between 2014 and 2017, and the corresponding paper was published on ACM TOMS in 2018.
 
-> S. Harase and T. Kimoto, "Implementing 64-bit maximally equidistributed **F**<sub>2</sub>-linear generators with Mersenne prime period", ACM Transactions on Mathematical Software, Volume 44, Issue 3, April 2018, Article No. 30, 11 pp.
+> S. Harase and T. Kimoto, "Implementing 64-bit maximally equidistributed **F**<sub>2</sub>-linear generators with Mersenne prime period", ACM Transactions on Mathematical Software, Volume 44, Issue 3, April 2018, Article No. 30, 11 pp. <a href="http://doi.acm.org/10.1145/3159444">Artcle</a>
 
 ## Background
 CPUs and operating systems are moving from 32 to 64 bits, and hence it is important to have good 64-bit pseudorandom number generators (PRNGs) designed to fully exploit these word lengths. 
@@ -18,7 +18,7 @@ In this page, we introduce 64-bit maximally equidistributed **F**<sub>2</sub>-li
 ## Feature
 
 MELG19937-64 has the following properties:
--  Very long period 2<sup>19937</sup>-1 <span></span> 10<sup>6000</sup>;
+-  Very long period 2<sup>19937</sup>-1 <span></span> <span>&asymp;</span> 10<sup>6000</sup>;
 - High-dimensional uniformity completely optimized;
 - Fast generation competitive with MT19937-64;
 - Memory size requiring only 312 words (similarly to MT19937-64).
