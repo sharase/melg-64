@@ -9,7 +9,7 @@ The 64-bit **M**aximally **E**quidistributed **F**<sub>2</sub>-**L**inear **G**e
 ## Background
 CPUs and operating systems are moving from 32 to 64 bits, and hence it is important to have good 64-bit pseudorandom number generators (PRNGs) designed to fully exploit these word lengths. 
 
-The 32-bit Mersenne Twister (MT) MT19937 (Matsumoto--Nishimura, 1998) is one of the most widely used PRNGs, but it is _not completely optimized_ in terms of _high-dimensional uniformity_, which is a theoretical criterion of PRNGs. The 32-bit WELL generators (Panneton et. al., 2006) was developed in order to overcome this weakness. 
+The 32-bit Mersenne Twister (MT) MT19937 (Matsumoto and Nishimura, 1998) is one of the most widely used PRNGs, but it is _not completely optimized_ in terms of _high-dimensional uniformity_, which is a theoretical criterion of PRNGs. The 32-bit WELL generators (Panneton et. al., 2006) was developed in order to overcome this weakness. 
 
 However, for 64-bit PRNGs, MT19937-64 (Nishimura, 2000) and SFMT19937 using SIMD (Saito and Matsumoto, 2008), etc., have been proposed, but there exists no 64-bit MT-type long-period linear PRNG completely optimized for high-dimensional uniformity, such as a variant of WELL generators.
 
@@ -23,15 +23,15 @@ MELG19937-64 has the following properties:
 - Fast generation competitive with MT19937-64;
 - Memory size requiring only 312 words (similarly to MT19937-64).
 
-We provide the codes for **MELG-64** with various period lengths from 2<sup>607</sup>-1 to 2<sup>44497</sup>-1. Also, we have implemented the jump-ahead algorithm in order to obtain disjoint streams in parallel computing.
+We provide the codes for **MELG-64** with various period lengths from 2<sup>607</sup>-1 to 2<sup>44497</sup>-1. The jump-ahead algorithm is also implemented in order to obtain disjoint streams in parallel computing. (The default skip size is 2<sup>256</sup>.)
 
 ## Usage
 
 Please click the "Code" button in the upper right of the content pane, and clone this page: 
 
-> clone https://github.com/sharase/melg-64.git
+> git clone https://github.com/sharase/melg-64.git
 
-or download the zip file. If you want to use **MELG19937-64**, 
+or download the zip file. If you want to use **MELG19937-64**, for example,
 > cd melg-64 </br>
 > cd melg19937-64 </br>
 > gcc melg19937-64.c -o melg19937-64 -O3 -Wall </br>
@@ -62,7 +62,7 @@ This definition is based on the assumption that the higher digits are large numb
 
 Now we have a trivial upper bound 
 
-> k(v) <span>&le;</span> <span>&lfloor;</span> log<sub>2</sub> (P+1) /v <span>&rfloor;</span>
+> k(v) <span>&le;</span> <span>&lfloor;</span> log<sub>2</sub>(P+1) / v <span>&rfloor;</span>
 
 for each v = 1,2, ...,w. Define the sum of the gaps 
 
@@ -118,8 +118,12 @@ This criterion implies that the PRNG avoids a long-lasting impact for poor initi
 
 ## Further readings
 
+If you are interested in more detail, please see the presentation slides <a href="https://www.slideshare.net/ShinHarase/implementing-64bit-maximally-equidistributed-f2linear-generators-with-mersenne-prime-period">here</a>.
+
 - S. Harase and T. Kimoto, "Implementing 64-bit maximally equidistributed **F**<sub>2</sub>-linear generators with Mersenne prime period", ACM Transactions on Mathematical Software, Volume 44, Issue 3, April 2018, Article No. 30, 11 Pages. <a href="http://doi.acm.org/10.1145/3159444">Artcle</a>
 - S. Harase, "Conversion of Mersenne Twister to double-precision floating-point numbers", Mathematics and Computers in Simulation, Volume 161, July 2019, Pages 76-83. <a href="https://doi.org/10.1016/j.matcom.2018.08.006"> Article</a>
+
+日本語の発表スライドも<a href="https://www.slideshare.net/ShinHarase/64-243960243">こちら</a>に公開しました。
 
 ## Acknowledgments
 This work was partially supported by JSPS KAKENHI Grant Numbers JP18K18016, JP26730015, JP26310211, JP15K13460, JP12J07985.
