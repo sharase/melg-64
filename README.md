@@ -66,7 +66,7 @@ Now we have a trivial upper bound
 
 for each v = 1,2, ...,w. Define the sum of the gaps 
 
-> <span>&Delta;</span> := <span>&sum;</span>&ensp;<span>&lfloor;</span> \log <sub>2</sub> (P+1)/v <span>&rfloor;</span> - k(v)), 
+> <span>&Delta;</span> := <span>&sum;</span>&ensp;<span>&lfloor;</span> log<sub>2</sub>(P+1) / v <span>&rfloor;</span> - k(v)), 
 
 where the sum is over all 1 <span>&le;</span> v <span>&le;</span> w.
 
