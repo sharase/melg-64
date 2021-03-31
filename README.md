@@ -57,7 +57,7 @@ A pseudorandom sequence **x**<sub>i</sub> of w-bit integers of period P is said 
 The largest value of k with this property is called the _dimension of equidistribution 
 with v-bit accuracy_, denoted by k(v).
 
-This definition is based on the assumption that the higher digits are large numbers. In particular, the dimension of equidistribution assures that the output values with the v most significant bits are uniformly distributed up to dimension k(v). Thus, as a criterion of uniformity, larger values of k(v) for each 1
+This definition is based on the assumption that the higher digits are large numbers. In particular, the dimension of equidistribution ensures that the output values with the v most significant bits are uniformly distributed up to dimension k(v). Thus, as a criterion of uniformity, larger values of k(v) for each 1
 <span>&le;</span> v <span>&le;</span>  w is desirable.
 
 Now we have a trivial upper bound 
