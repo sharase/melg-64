@@ -118,7 +118,7 @@ This criterion implies that the PRNG avoids a long-lasting impact for poor initi
 
 ## Further readings
 
-If you are interested in more detail, please see the presentation slides <a href="https://www.slideshare.net/ShinHarase/implementing-64bit-maximally-equidistributed-f2linear-generators-with-mersenne-prime-period">here</a>.
+For more information, please see the presentation slides <a href="https://www.slideshare.net/ShinHarase/implementing-64bit-maximally-equidistributed-f2linear-generators-with-mersenne-prime-period">here</a>.
 
 - S. Harase and T. Kimoto, "Implementing 64-bit maximally equidistributed **F**<sub>2</sub>-linear generators with Mersenne prime period", ACM Transactions on Mathematical Software, Volume 44, Issue 3, April 2018, Article No. 30, 11 Pages. <a href="http://doi.acm.org/10.1145/3159444">Artcle</a>
 - S. Harase, "Conversion of Mersenne Twister to double-precision floating-point numbers", Mathematics and Computers in Simulation, Volume 161, July 2019, Pages 76-83. <a href="https://doi.org/10.1016/j.matcom.2018.08.006"> Article</a>
