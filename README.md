@@ -64,7 +64,7 @@ Now we have a trivial upper bound
 
 > k(v) <span>&le;</span> <span>&lfloor;</span> log<sub>2</sub>(P+1) / v <span>&rfloor;</span>
 
-for each v = 1,2, ...,w. Define the sum of the gaps 
+for each v = 1, 2, ...,w. Define the sum of the gaps 
 
 > <span>&Delta;</span> := <span>&sum;</span>&ensp;<span>&lfloor;</span> log<sub>2</sub>(P+1) / v <span>&rfloor;</span> - k(v)), 
 
@@ -116,7 +116,7 @@ Let _N_<sub>1</sub> be the number of nonzero coefficients of P(x).
 In addition to the excellent equidistribution, as a secondary criterion, _N_<sub>1</sub> should be large enough. 
 This criterion implies that the PRNG avoids a long-lasting impact for poor initialization, such as 0-excess states (Panneton et al, 2006).
 
-## Further readings
+## Further reading
 
 For more information, please see the presentation slides <a href="https://www.slideshare.net/ShinHarase/implementing-64bit-maximally-equidistributed-f2linear-generators-with-mersenne-prime-period">here</a>.
 
