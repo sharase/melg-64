@@ -123,7 +123,7 @@ For more information, please see the presentation slides <a href="https://www.sl
 - S. Harase and T. Kimoto, "Implementing 64-bit maximally equidistributed **F**<sub>2</sub>-linear generators with Mersenne prime period", ACM Transactions on Mathematical Software, Volume 44, Issue 3, April 2018, Article No. 30, 11 Pages. <a href="http://doi.acm.org/10.1145/3159444">Artcle</a>
 - S. Harase, "Conversion of Mersenne Twister to double-precision floating-point numbers", Mathematics and Computers in Simulation, Volume 161, July 2019, Pages 76-83. <a href="https://doi.org/10.1016/j.matcom.2018.08.006"> Article</a>
 
-日本語の発表スライドも<a href="https://www.slideshare.net/ShinHarase/64-243960243">こちら</a>に公開しました。
+日本語の発表スライドも<a href="https://www.slideshare.net/ShinHarase/64-243960243">こちら</a>に公開しました。Youtubeの<a href="https://youtu.be/x9MWym2MV6o">解説動画</a>も作成しました。
 
 ## Acknowledgments
 This work was partially supported by JSPS KAKENHI Grant Numbers JP18K18016, JP26730015, JP26310211, JP15K13460, JP12J07985.
