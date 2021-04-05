@@ -78,8 +78,7 @@ The aim of our study is to design maximally equidistributed **F**<sub>2</sub>-li
 
 We compare the following MT-type PRNGs corresponding to 64-bit output sequences:
 - MELG19937-64: the 64-bit integer output of our proposed generator;
-- MT19937-64: the 64-bit integer output of the 64-bit Mersenne Twister (downloaded from
-http://www.math.sci.hiroshima-u.ac.jp/∼m-mat/MT/emt64.html);
+- MT19937-64: the 64-bit integer output of the 64-bit Mersenne Twister (downloaded from <a href="http://www.math.sci.hiroshima-u.ac.jp/m-mat/MT/emt.html">here</a>);
 - MT19937-64 (ID3): the 64-bit integer output of a 64-bit Mersenne Twister based on a five-term
 recursion (ID3) (Nishimura 2000);
 - SFMT19937-64 (without SIMD): the 64-bit integer output of the SIMD-oriented Fast
