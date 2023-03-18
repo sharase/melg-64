@@ -110,7 +110,7 @@ generators are optimized under the assumption that one will mainly be using 32-b
 from the viewpoint of the dimensions of equidistribution with v-bit accuracy.)
 
 Remark:
->For MT-type PRNGs, each bit of the sequence obeys a linear feedback shift register generator with the characteristic polynomial P(x) over the two-element field **F**<sub>2</sub>.
+>For MT-type PRNGs, each bit of the sequence obeys a linear feedback shift register generator with characteristic polynomial P(x) over the two-element field **F**<sub>2</sub>.
 Let _N_<sub>1</sub> be the number of nonzero coefficients of P(x). 
 In addition to the excellent equidistribution, as a secondary criterion, _N_<sub>1</sub> should be large enough. 
 This criterion implies that the PRNG avoids a long-lasting impact for poor initialization, such as 0-excess states (Panneton et al, 2006).
